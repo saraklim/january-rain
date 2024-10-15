@@ -8,20 +8,29 @@ const InteractiveDots = () => {
   const [selectedDot, setSelectedDot] = useState(null);
 
   useEffect(() => {
-    // Generate random dots
-    const newDots = Array.from({ length: 10 }, (_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      content: `Content for dot ${i + 1}`
-    }));
-    setDots(newDots);
+    // Fetch dot data from JSON file
+    const fetchDots = async () => {
+      try {
+        const response = await fetch('/static/data.json');
+        const data = await response.json();
+        const newDots = data.map(dot => ({
+          ...dot,
+          x: Math.random() * 100,
+          y: Math.random() * 100
+        }));
+        setDots(newDots);
+      } catch (error) {
+        console.error('Error fetching dot data:', error);
+      }
+    };
+
+    fetchDots();
   }, []);
 
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
     // Replace 'your-password' with the actual password
-    if (password === 'your-password') {
+    if (password === 'dogbless') {
       setIsAuthenticated(true);
     } else {
       alert('Incorrect password');
@@ -67,8 +76,8 @@ const InteractiveDots = () => {
       {selectedDot && (
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-80">
           <div className="bg-white p-6 rounded-lg max-w-md">
-            <h2 className="text-xl font-bold mb-2">Dot {selectedDot.id + 1}</h2>
-            <p>{selectedDot.content}</p>
+            <h2 className="text-xl font-bold mb-2">{selectedDot.dateTime} {selectedDot.author}</h2>
+            <p>{selectedDot.message}</p>
             <button
               onClick={() => setSelectedDot(null)}
               className="mt-4 bg-blue-500 text-white px-4 py-2 rounded"
