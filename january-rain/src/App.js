@@ -30,7 +30,6 @@ const InteractiveDots = () => {
 
   useEffect(() => {
     if (selectedDot) {
-      // Delay setting isExpanded to true
       const timer = setTimeout(() => setIsExpanded(true), 500);
       return () => clearTimeout(timer);
     } else {
@@ -53,12 +52,37 @@ const InteractiveDots = () => {
 
   const handleClose = () => {
     setIsExpanded(false);
-    // Delay unsetting selectedDot to allow fade-out animation
     setTimeout(() => setSelectedDot(null), 300);
   };
 
   const getRandomColor = () => {
     return `hsl(${Math.random() * 360}, 100%, 75%)`;
+  };
+
+  const renderExpandedContent = (dot) => {
+    return (
+      <div className={`absolute inset-0 p-16 overflow-auto flex flex-col items-center justify-center text-center transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
+        <button
+          onClick={handleClose}
+          className="absolute top-8 right-8 text-white hover:text-gray-300"
+        >
+          <X size={24} />
+        </button>
+        <div className="text-white max-w-2xl">
+          <h2 className="text-3xl font-bold mb-4">{dot.dateTime} {dot.author}</h2>
+          {dot.image ? (
+            <div className="mb-4">
+              <img
+                src={dot.image}
+                alt={dot.message}
+                className="max-w-full max-h-[50vh] rounded-lg object-contain mx-auto"
+              />
+            </div>
+          ) : null}
+          <p className="text-xl">{dot.message}</p>
+        </div>
+      </div>
+    );
   };
 
   if (!isAuthenticated) {
@@ -85,43 +109,33 @@ const InteractiveDots = () => {
 
   return (
     <div className="relative h-screen bg-black overflow-hidden">
-      {dots.map((dot) => (
-        <div
-          key={dot.id}
-          className={`absolute rounded-full cursor-pointer transform transition-all duration-500 ease-in-out ${
-            selectedDot && selectedDot.id === dot.id
-              ? 'w-[90vmin] h-[90vmin] cursor-default'
-              : 'w-12 h-12 hover:scale-125 hover:z-10'
-          }`}
-          style={{
-            left: selectedDot && selectedDot.id === dot.id
-              ? 'calc(50% - 45vmin)'
-              : `calc(${dot.x}% - 1.5rem)`,
-            top: selectedDot && selectedDot.id === dot.id
-              ? 'calc(50% - 45vmin)'
-              : `calc(${dot.y}% - 1.5rem)`,
-            backgroundColor: dot.color,
-            boxShadow: '0 0 10px rgba(255, 255, 255, 0.5)',
-            zIndex: selectedDot && selectedDot.id === dot.id ? 50 : 'auto'
-          }}
-          onClick={() => !selectedDot && handleDotClick(dot)}
-        >
-          {selectedDot && selectedDot.id === dot.id && (
-            <div className={`absolute inset-0 p-16 overflow-auto flex flex-col items-center justify-center text-center transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
-              <button
-                onClick={handleClose}
-                className="absolute top-8 right-8 text-white hover:text-gray-300"
-              >
-                <X size={24} />
-              </button>
-              <div className="text-white max-w-2xl">
-                <h2 className="text-3xl font-bold mb-4">{selectedDot.dateTime} {selectedDot.author}</h2>
-                <p className="text-xl">{selectedDot.message}</p>
-              </div>
-            </div>
-          )}
-        </div>
-      ))}
+      {dots.map((dot) => {
+        const isSelected = selectedDot && selectedDot.id === dot.id;
+        return (
+          <div
+            key={dot.id}
+            className={`absolute rounded-full cursor-pointer transform transition-all duration-500 ease-in-out ${
+              isSelected
+                ? 'w-[90vmin] h-[90vmin] cursor-default'
+                : 'w-12 h-12 hover:scale-125 hover:z-10'
+            }`}
+            style={{
+              left: isSelected
+                ? 'calc(50% - 45vmin)'
+                : `calc(${dot.x}% - 1.5rem)`,
+              top: isSelected
+                ? 'calc(50% - 45vmin)'
+                : `calc(${dot.y}% - 1.5rem)`,
+              backgroundColor: dot.color,
+              boxShadow: '0 0 10px rgba(255, 255, 255, 0.5)',
+              zIndex: isSelected ? 50 : 'auto'
+            }}
+            onClick={() => !selectedDot && handleDotClick(dot)}
+          >
+            {isSelected && renderExpandedContent(dot)}
+          </div>
+        );
+      })}
     </div>
   );
 };
