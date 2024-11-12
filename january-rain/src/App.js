@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Lock, X } from 'lucide-react';
 
 const InteractiveDots = () => {
@@ -7,6 +7,7 @@ const InteractiveDots = () => {
   const [dots, setDots] = useState([]);
   const [selectedDot, setSelectedDot] = useState(null);
   const [isExpanded, setIsExpanded] = useState(false);
+  const containerRef = useRef(null);
 
   useEffect(() => {
     const fetchDots = async () => {
@@ -37,6 +38,31 @@ const InteractiveDots = () => {
     }
   }, [selectedDot]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Only handle clicks if a dot is selected
+      if (!selectedDot) return;
+
+      // Check if the click target is within any dot
+      const isClickInsideDot = event.target.closest('.dot');
+      // Check if the click target is within the expanded dot content
+      const isClickInsideContent = event.target.closest('.expanded-dot-content');
+      // Check if the click is on the close button
+      const isClickOnCloseButton = event.target.closest('.close-button');
+
+      // If clicking outside everything (not on a dot and not on expanded content),
+      // close the expanded dot
+      if (!isClickInsideDot && !isClickInsideContent && !isClickOnCloseButton) {
+        handleClose();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [selectedDot]);
+
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
     if (password === 'dogbless') {
@@ -46,8 +72,20 @@ const InteractiveDots = () => {
     }
   };
 
-  const handleDotClick = (dot) => {
-    setSelectedDot(dot);
+  const handleDotClick = (dot, event) => {
+    event.stopPropagation();
+    
+    if (selectedDot && selectedDot.id !== dot.id) {
+      // If clicking a different dot while one is expanded,
+      // smoothly transition to the new dot
+      setIsExpanded(false);
+      setTimeout(() => {
+        setSelectedDot(dot);
+      }, 300);
+    } else if (!selectedDot) {
+      // If no dot is currently selected, expand the clicked dot
+      setSelectedDot(dot);
+    }
   };
 
   const handleClose = () => {
@@ -61,10 +99,12 @@ const InteractiveDots = () => {
 
   const renderExpandedContent = (dot) => {
     return (
-      <div className={`absolute inset-0 p-16 overflow-auto flex flex-col items-center justify-center text-center transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
+      <div 
+        className={`expanded-dot-content absolute inset-0 p-16 overflow-auto flex flex-col items-center justify-center text-center transition-opacity duration-300 ${isExpanded ? 'opacity-100' : 'opacity-0'}`}
+      >
         <button
           onClick={handleClose}
-          className="absolute top-8 right-8 text-white hover:text-gray-300"
+          className="close-button absolute top-8 right-8 text-white hover:text-gray-300"
         >
           <X size={24} />
         </button>
@@ -108,13 +148,13 @@ const InteractiveDots = () => {
   }
 
   return (
-    <div className="relative h-screen bg-black overflow-hidden">
+    <div ref={containerRef} className="relative h-screen bg-black overflow-hidden">
       {dots.map((dot) => {
         const isSelected = selectedDot && selectedDot.id === dot.id;
         return (
           <div
             key={dot.id}
-            className={`absolute rounded-full cursor-pointer transform transition-all duration-500 ease-in-out ${
+            className={`dot expanded-dot-content absolute rounded-full cursor-pointer transform transition-all duration-500 ease-in-out ${
               isSelected
                 ? 'w-[90vmin] h-[90vmin] cursor-default'
                 : 'w-12 h-12 hover:scale-125 hover:z-10'
@@ -130,7 +170,7 @@ const InteractiveDots = () => {
               boxShadow: '0 0 10px rgba(255, 255, 255, 0.5)',
               zIndex: isSelected ? 50 : 'auto'
             }}
-            onClick={() => !selectedDot && handleDotClick(dot)}
+            onClick={(e) => handleDotClick(dot, e)}
           >
             {isSelected && renderExpandedContent(dot)}
           </div>
