@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Lock, X } from 'lucide-react';
+import { Lock, X, Clock, Shuffle } from 'lucide-react';
 
 const InteractiveDots = () => {
   const [password, setPassword] = useState('');
@@ -7,19 +7,52 @@ const InteractiveDots = () => {
   const [dots, setDots] = useState([]);
   const [selectedDot, setSelectedDot] = useState(null);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isChronological, setIsChronological] = useState(false);
   const containerRef = useRef(null);
+
+  const getRandomColor = () => {
+    return `hsl(${Math.random() * 360}, 100%, 75%)`;
+  };
 
   useEffect(() => {
     const fetchDots = async () => {
       try {
         const response = await fetch('/static/data.json');
         const data = await response.json();
-        const newDots = data.map(dot => ({
+        // Sort the data by dateTime
+        const sortedData = [...data].sort((a, b) => 
+          new Date(a.dateTime) - new Date(b.dateTime)
+        );
+        
+        const newDots = sortedData.map((dot, index) => ({
           ...dot,
-          x: Math.random() * 90 + 5,
-          y: Math.random() * 90 + 5,
-          color: getRandomColor()
+          color: getRandomColor(),
+          // Store both random and chronological positions
+          random: {
+            x: Math.random() * 90 + 5,
+            y: Math.random() * 90 + 5
+          },
+          // Chronological positions will be calculated later
+          chronological: { x: 0, y: 0 }
         }));
+
+        // Calculate chronological positions in a spiral
+        const totalDots = newDots.length;
+        const spiralTurns = Math.ceil(totalDots / 8); // Adjust number of turns
+        const angleStep = (2 * Math.PI * spiralTurns) / totalDots;
+        const radiusStep = 35 / totalDots; // Maximum radius of 35% of container
+
+        newDots.forEach((dot, index) => {
+          const angle = index * angleStep;
+          const radius = (index + 1) * radiusStep;
+          
+          // Convert polar coordinates to Cartesian
+          dot.chronological = {
+            x: 50 + radius * Math.cos(angle), // Center at 50%
+            y: 50 + radius * Math.sin(angle)  // Center at 50%
+          };
+        });
+
         setDots(newDots);
       } catch (error) {
         console.error('Error fetching dot data:', error);
@@ -40,18 +73,12 @@ const InteractiveDots = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Only handle clicks if a dot is selected
       if (!selectedDot) return;
 
-      // Check if the click target is within any dot
       const isClickInsideDot = event.target.closest('.dot');
-      // Check if the click target is within the expanded dot content
       const isClickInsideContent = event.target.closest('.expanded-dot-content');
-      // Check if the click is on the close button
       const isClickOnCloseButton = event.target.closest('.close-button');
 
-      // If clicking outside everything (not on a dot and not on expanded content),
-      // close the expanded dot
       if (!isClickInsideDot && !isClickInsideContent && !isClickOnCloseButton) {
         handleClose();
       }
@@ -93,8 +120,15 @@ const InteractiveDots = () => {
     setTimeout(() => setSelectedDot(null), 300);
   };
 
-  const getRandomColor = () => {
-    return `hsl(${Math.random() * 360}, 100%, 75%)`;
+  const handleToggleMode = () => {
+    if (selectedDot) {
+      handleClose();
+    }
+    setIsChronological(!isChronological);
+  };
+
+  const getDotPosition = (dot) => {
+    return isChronological ? dot.chronological : dot.random;
   };
 
   const renderExpandedContent = (dot) => {
@@ -149,12 +183,42 @@ const InteractiveDots = () => {
 
   return (
     <div ref={containerRef} className="relative h-screen bg-black overflow-hidden">
+      {/* Mode toggle button */}
+      <button
+        onClick={handleToggleMode}
+        className="absolute top-4 right-4 z-50 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-full flex items-center gap-2 transition-colors"
+      >
+        {isChronological ? (
+          <>
+            <Shuffle size={20} />
+            <span>Random</span>
+          </>
+        ) : (
+          <>
+            <Clock size={20} />
+            <span>Chronological</span>
+          </>
+        )}
+      </button>
+
+      {/* Time indicator for chronological mode */}
+      {isChronological && !selectedDot && (
+        <div className="absolute top-4 left-4 text-white/50 text-sm">
+          <div className="flex items-center gap-2">
+            <span>Oldest</span>
+            <div className="w-24 h-0.5 bg-gradient-to-r from-white/50 to-transparent"></div>
+          </div>
+        </div>
+      )}
+
       {dots.map((dot) => {
         const isSelected = selectedDot && selectedDot.id === dot.id;
+        const position = getDotPosition(dot);
+        
         return (
           <div
             key={dot.id}
-            className={`dot expanded-dot-content absolute rounded-full cursor-pointer transform transition-all duration-500 ease-in-out ${
+            className={`dot absolute rounded-full cursor-pointer transform transition-all duration-500 ease-in-out ${
               isSelected
                 ? 'w-[90vmin] h-[90vmin] cursor-default'
                 : 'w-12 h-12 hover:scale-125 hover:z-10'
@@ -162,10 +226,10 @@ const InteractiveDots = () => {
             style={{
               left: isSelected
                 ? 'calc(50% - 45vmin)'
-                : `calc(${dot.x}% - 1.5rem)`,
+                : `calc(${position.x}% - 1.5rem)`,
               top: isSelected
                 ? 'calc(50% - 45vmin)'
-                : `calc(${dot.y}% - 1.5rem)`,
+                : `calc(${position.y}% - 1.5rem)`,
               backgroundColor: dot.color,
               boxShadow: '0 0 10px rgba(255, 255, 255, 0.5)',
               zIndex: isSelected ? 50 : 'auto'
@@ -173,6 +237,13 @@ const InteractiveDots = () => {
             onClick={(e) => handleDotClick(dot, e)}
           >
             {isSelected && renderExpandedContent(dot)}
+            
+            {/* Date tooltip for chronological mode */}
+            {isChronological && !isSelected && (
+              <div className="absolute opacity-0 hover:opacity-100 bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-black/80 text-white text-xs rounded whitespace-nowrap">
+                {new Date(dot.dateTime).toLocaleDateString()}
+              </div>
+            )}
           </div>
         );
       })}
