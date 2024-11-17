@@ -4,6 +4,41 @@ import ExpandedDot from './ExpandedDot';
 import ModeToggle from './ModeToggle';
 import { calculateDotPositions } from './utils';
 
+const ChronologicalPath = ({ dots }) => {
+  const margin = 10;
+  const rowHeight = 15;
+  const numRows = Math.ceil(dots.length / 8);
+  
+  return (
+    <div className="absolute inset-0" style={{ zIndex: 0 }}>
+      {Array.from({ length: numRows }).map((_, rowIndex) => {
+        const isEvenRow = rowIndex % 2 === 0;
+        const y = margin + (rowIndex * rowHeight);
+        const isLastRow = rowIndex === numRows - 1;
+        
+        return (
+          <div 
+            key={rowIndex}
+            style={{
+              position: 'absolute',
+              left: `calc(${margin}% - 0.0rem)`,
+              top: `calc(${y}% - 0rem)`,
+              width: `calc(${100 - (2 * margin)}% + 0rem)`,
+              // Only add vertical height if it's not the last row
+              height: !isLastRow ? `calc(${rowHeight}%)` : '0',
+              // Left vertical line for odd rows that aren't the last row
+              borderLeft: !isEvenRow && !isLastRow ? '2px solid rgba(255, 255, 255, 0.15)' : 'none',
+              // Right vertical line for even rows that aren't the last row
+              borderRight: isEvenRow && !isLastRow ? '2px solid rgba(255, 255, 255, 0.15)' : 'none',
+              borderTop: '2px solid rgba(255, 255, 255, 0.15)'
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+};
+
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [dots, setDots] = useState([]);
@@ -88,14 +123,7 @@ const App = () => {
     <div ref={containerRef} className="relative h-screen bg-black overflow-hidden">
       <ModeToggle isChronological={isChronological} onToggle={handleToggleMode} />
 
-      {isChronological && !selectedDot && (
-        <div className="absolute top-4 left-4 text-white/50 text-sm">
-          <div className="flex items-center gap-2">
-            <span>Oldest</span>
-            <div className="w-24 h-0.5 bg-gradient-to-r from-white/50 to-transparent"></div>
-          </div>
-        </div>
-      )}
+      {isChronological && <ChronologicalPath dots={dots} />}
 
       {dots.map((dot) => {
         const isSelected = selectedDot && selectedDot.id === dot.id;
@@ -114,7 +142,7 @@ const App = () => {
               top: isSelected ? 'calc(50% - 45vmin)' : `calc(${position.y}% - 1.5rem)`,
               backgroundColor: dot.color,
               boxShadow: '0 0 10px rgba(255, 255, 255, 0.5)',
-              zIndex: isSelected ? 50 : 'auto'
+              zIndex: isSelected ? 50 : 2  // Added explicit z-index for dots
             }}
             onClick={(e) => handleDotClick(dot, e)}
           >

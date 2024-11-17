@@ -8,6 +8,7 @@ export const getRandomColor = () => {
     const rowHeight = 15;
     const margin = 10;
     const usableWidth = 100 - (2 * margin);
+    const verticalTransitionHeight = rowHeight / 2; // Height of vertical transition
     
     // First, calculate time differences
     const timestamps = dots.map(dot => new Date(dot.dateTime).getTime());
@@ -27,14 +28,12 @@ export const getRandomColor = () => {
         timestamp: new Date(dot.dateTime).getTime()
       });
       
-      // Start new row if we hit max dots per row or next dot would exceed time span
       if (currentRow.length === dotsPerRow || index === dots.length - 1) {
         rows.push(currentRow);
         currentRow = [];
       }
     });
     
-    // Calculate positions for each dot
     return dots.map((dot, index) => {
       const rowIndex = Math.floor(index / dotsPerRow);
       const isEvenRow = rowIndex % 2 === 0;
@@ -44,19 +43,45 @@ export const getRandomColor = () => {
       // Find position within row based on timestamp
       const rowStartTime = Math.min(...currentRow.map(d => new Date(d.dateTime).getTime()));
       const rowEndTime = Math.max(...currentRow.map(d => new Date(d.dateTime).getTime()));
-      const rowTimeSpan = rowEndTime - rowStartTime || 1; // Prevent division by zero
+      const rowTimeSpan = rowEndTime - rowStartTime || 1;
       
-      // Calculate x position based on time within the row
+      // Calculate position within the row (0 to 1)
       let xPercentageInRow = (dotTime - rowStartTime) / rowTimeSpan;
-      if (!isEvenRow) {
-        xPercentageInRow = 1 - xPercentageInRow; // Reverse for odd rows
+      
+      // Determine if this dot is in a transition zone
+      const isLastInRow = (index + 1) % dotsPerRow === 0;
+      const isFirstInRow = index % dotsPerRow === 0;
+      
+      let xPercentage, yPercentage;
+      
+      if (isLastInRow && index !== dots.length - 1) {
+        // This dot is transitioning to the next row
+        xPercentage = margin + (isEvenRow ? usableWidth : 0);
+        
+        // Calculate progress through the vertical transition
+        const nextRowStartTime = new Date(dots[index + 1].dateTime).getTime();
+        const transitionProgress = Math.min(1, (dotTime - rowStartTime) / (nextRowStartTime - rowStartTime));
+        
+        // Apply vertical transition
+        yPercentage = margin + (rowIndex * rowHeight) + (transitionProgress * verticalTransitionHeight);
+      } else if (isFirstInRow && index !== 0) {
+        // This dot is completing the transition from the previous row
+        xPercentage = margin + (isEvenRow ? 0 : usableWidth);
+        
+        // Calculate progress through the vertical transition
+        const prevRowEndTime = new Date(dots[index - 1].dateTime).getTime();
+        const transitionProgress = (dotTime - prevRowEndTime) / (rowEndTime - prevRowEndTime);
+        
+        // Apply vertical transition
+        yPercentage = margin + ((rowIndex - 0.5) * rowHeight) + (transitionProgress * verticalTransitionHeight);
+      } else {
+        // Normal horizontal movement
+        if (!isEvenRow) {
+          xPercentageInRow = 1 - xPercentageInRow;
+        }
+        xPercentage = margin + (xPercentageInRow * usableWidth);
+        yPercentage = margin + (rowIndex * rowHeight);
       }
-      
-      // Apply margins to x position
-      const xPercentage = margin + (xPercentageInRow * usableWidth);
-      
-      // Calculate y position
-      const yPercentage = margin + (rowIndex * rowHeight);
       
       return {
         ...dot,
