@@ -50,7 +50,7 @@ const App = () => {
   useEffect(() => {
     const fetchDots = async () => {
       try {
-        const response = await fetch('/static/data.json');
+        const response = await fetch(`${process.env.PUBLIC_URL}/static/data.json`);
         const data = await response.json();
         const sortedData = [...data].sort((a, b) => 
           new Date(a.dateTime) - new Date(b.dateTime)

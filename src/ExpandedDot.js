@@ -36,7 +36,7 @@ const ExpandedDot = ({ dot, isExpanded, onClose }) => {
             {dot.image ? (
               <div className="flex justify-center">
                 <img
-                  src={dot.image}
+                  src={`${process.env.PUBLIC_URL}${dot.image}`}
                   alt={dot.message}
                   className="rounded-lg object-contain max-h-[40vh] w-auto max-w-full"
                 />
