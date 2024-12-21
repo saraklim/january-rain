@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import Authentication from './Authentication';
 import ExpandedDot from './ExpandedDot';
 import ModeToggle from './ModeToggle';
+import FadeInText from './components/FadeInText';  
 import { calculateDotPositions } from './utils';
 
 const ChronologicalPath = ({ dots }) => {
@@ -41,6 +42,7 @@ const ChronologicalPath = ({ dots }) => {
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showDots, setShowDots] = useState(false);  // New state for controlling dots visibility
   const [dots, setDots] = useState([]);
   const [selectedDot, setSelectedDot] = useState(null);
   const [isExpanded, setIsExpanded] = useState(false);
@@ -117,6 +119,41 @@ const App = () => {
 
   if (!isAuthenticated) {
     return <Authentication onAuthenticate={setIsAuthenticated} />;
+  }
+  const handleTransitionClick = () => {
+    setShowDots(true);
+  };
+
+  if (!isAuthenticated) {
+    return <Authentication onAuthenticate={setIsAuthenticated} />;
+  }
+
+  if (!showDots) {
+    return (
+      <div 
+      className="flex items-center justify-center h-screen bg-black text-white cursor-pointer"
+      onClick={handleTransitionClick}
+    >
+      <div className="text-center max-w-2xl px-8">
+        <FadeInText delay={500}>
+          <h1 className="text-3xl mb-12 font-light">
+            Welcome Niall, you have been successfully authenticated.
+          </h1>
+        </FadeInText>
+        <FadeInText delay={2000}>
+          <p className="text-xl mb-16 text-gray-300 leading-relaxed">
+            What you'll find inside is a compilation of our pinned messages over the years 
+            (or at least the ones I remembered), and a few other miscellaneous bits. Enjoy &lt;3
+          </p>
+        </FadeInText>
+        <FadeInText delay={3500}>
+          <p className="text-gray-400 text-lg">
+            Click anywhere to begin
+          </p>
+        </FadeInText>
+      </div>
+    </div>
+    );
   }
 
   return (

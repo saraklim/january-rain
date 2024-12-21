@@ -1,29 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ArrowRight, RefreshCcw } from 'lucide-react';
+import FadeInText from './components/FadeInText';
 
 const questions = [
   { question: "What animal brings blessings?", answer: "dog" },
   { question: "What animal gives the best hugs?", answer: "octopus" },
   { question: "What animal embodies the infinite complexity of a human relationship?", answer: "frog" },
 ];
-
-const FadeInText = ({ children, delay = 0 }) => {
-  const [opacity, setOpacity] = useState(0);
-  
-  useEffect(() => {
-    const timer = setTimeout(() => setOpacity(1), delay);
-    return () => clearTimeout(timer);
-  }, [delay]);
-
-  return (
-    <div 
-      className="transition-opacity duration-1000"
-      style={{ opacity }}
-    >
-      {children}
-    </div>
-  );
-};
 
 const Authentication = ({ onAuthenticate }) => {
   const [currentScreen, setCurrentScreen] = useState(0);
