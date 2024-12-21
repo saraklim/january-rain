@@ -11,19 +11,21 @@
         "message": "FADE IN:\nINT. QUIET BAR - NIGHT\n\nThe sounds of \"Sympathy for the Devil\" by the Rolling Stones fill the air as we see a WOMAN sitting at the bar, downing shot after shot, exhibiting wild and reckless behaviour. She climbs into bed fully clothed, shoes and all, and sets her alarm for the morning. Just as the opening words of the song are about to be sung, she is seen sitting in front of her laptop joining a zoom call, the song stops and woman says:\n\nWOMAN:\nPlease allow me to introduce myself\n\nImmediately cut to black, with the faint sound of wrenching and aggressive vomiting.\n\nMANS VOICE:\nWhere did she go?\n\nFADE IN:\nINT. WOMAN'S APARTMENT - DAY\n\nThe sounds of \"Public Service Announcement\" by Jay Z play as we see the same woman frantically typing on her laptop, drinking coffee, and writing code. She is making up for the previous weeks wild behaviour, trying to prove herself. The energy is chaotic and frenzied. Just as Jay-Z gets to the famous line, she is again seen joining a zoom call,\n\nWOMAN:\nAllow me to reintroduce myself\n\nCut to black immediately.\nSounds of the woman coughing uncontrollably, violently, struggling to breathe.\n\nMANS VOICE:\n\"This shit again?\"",
         "dateTime": "2023-02-21 18:00:00",
         "author": "NM",
-        "comment": "I mean this didn't get pinned, but it's fucking legendary."
+        "comment": "I mean this didn't get pinned, but aw man it's so good."
     },
     {
         "id": 3,
         "message": "arms+legs, torso, head?",
         "dateTime": "2023-03-13 18:24:00",
-        "author": "NM"
+        "author": "NM",
+        "comment": "During our first forray into interacting with LLMs via an API, woah."
     },
     {
         "id": 4,
         "message": "i would flash up my sexcalidraw",
         "dateTime": "2023-04-04 13:53:00",
-        "author": "NM"
+        "author": "NM",
+        "comment": "Legendary."
     },
     {
         "id": 5,
@@ -35,7 +37,8 @@
         "id": 6,
         "message": "now that'd be a sight - A MAN, sitting in the middle of an empty shed on a tricolour camping chair, crying, while there's a wild cat orgy going on around him\nand in the corner, a still life of peaches on a bedsheet",
         "dateTime": "2023-05-15 18:30:00",
-        "author": "SK"
+        "author": "SK",
+        "comment": "Not a pin either, but rereading these convos made me laugh."
     },
     {
         "id": 7,
@@ -107,7 +110,8 @@
         "id": 18,
         "message": "We have a variety of alternative milks on offer",
         "dateTime": "2024-08-29 17:03:00",
-        "author": "SK"
+        "author": "NM",
+        "comment": "This is honestly my favourite, it was so perfect."
     },
     {
         "id": 19,
@@ -144,7 +148,7 @@
         "message": "i dont believe there's any underlying meaning in anything",
         "dateTime": "2024-09-24 11:29:00",
         "author": "SK",
-        "comment": "happy birthday"
+        "comment": "happy birthday lol"
     },
     {
         "id": 25,
@@ -176,7 +180,7 @@
         "message": "go take a long swim in a bin",
         "dateTime": "2024-10-18 17:10:00",
         "author": "NM",
-        "comment": "WORK CHAT"
+        "comment": "First and only pin in 'the work chat'"
     },
     {
         "id": 30,
@@ -216,20 +220,28 @@
     },
     {
         "id": 36,
+        "message": "HAPPY 4 JANUARY\nThank you for a beautiful three years.",
+        "dateTime": "2025-01-04 16:20:00",
+        "author": "SK"
+    },
+    {
+        "id": 37,
         "message": "test message",
         "dateTime": "2023-08-24 11:29:00",
         "author": "NM",
         "image": "/static/images/bday cake.png"
     },
     {
-        "id": 37,
+        "id": 38,
         "message": "Pervy frog",
+        "comment": "Pervy frog",
         "dateTime": "2024-05-07 12:06:00",
         "author": "NM",
         "image": "/static/images/1 photo added.jpeg"
     },
     {
-        "id": 38,
+        "id": 39,
+        "comment": "DALL-E | a still-life painting of peaches on a white bedsheet",
         "message": "a still-life painting of peaches on a white bedsheet",
         "dateTime": "2024-06-21 09:26:00",
         "author": "SK",
