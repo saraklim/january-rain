@@ -16,23 +16,23 @@ const ExpandedDot = ({ dot, isExpanded, onClose }) => {
         isExpanded ? 'opacity-100' : 'opacity-0'
       }`}
     >
-      <div className="relative w-full h-full max-w-[90vw] p-4 overflow-auto flex items-center justify-center">
-        <div className="relative w-full max-w-lg bg-gray-900/80 rounded-lg p-4">
+      <div className="relative w-full h-full max-w-[90vw] p-4 flex items-center justify-center">
+        <div className="relative w-full max-w-lg bg-gray-900/80 rounded-lg p-4 max-h-[80vh] flex flex-col">
           {/* Close button */}
           <button
             onClick={onClose}
-            className="absolute top-2 right-2 text-white hover:text-gray-300 transition-colors"
+            className="absolute top-2 right-2 text-white hover:text-gray-300 transition-colors z-10"
           >
             <X size={24} />
           </button>
 
           {/* Author - top right */}
-          <div className="absolute top-4 right-10 text-white/90">
+          <div className="absolute top-4 right-10 text-white/90 z-10">
             <p className="text-sm font-medium">{dot.author}</p>
           </div>
 
-          {/* Main content - centered */}
-          <div className="text-white mt-8 mb-4">
+          {/* Main content - centered with scroll */}
+          <div className="flex-grow overflow-y-auto mt-8 mb-4 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-transparent">
             {dot.image ? (
               <div className="flex justify-center">
                 <img
@@ -42,9 +42,16 @@ const ExpandedDot = ({ dot, isExpanded, onClose }) => {
                 />
               </div>
             ) : (
-              <p className="text-2xl font-medium text-left mx-auto">
-                {dot.message}
-              </p>
+              <div className="px-4">
+                <p className="text-xl font-medium text-left text-white break-words">
+                  {dot.message.split('\n').map((line, index) => (
+                    <React.Fragment key={index}>
+                      {line}
+                      {index < dot.message.split('\n').length - 1 && <br />}
+                    </React.Fragment>
+                  ))}
+                </p>
+              </div>
             )}
           </div>
 
