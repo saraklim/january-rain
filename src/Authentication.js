@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { ArrowRight, RefreshCcw } from 'lucide-react';
 
 const questions = [
-  { question: "What is the password?", answer: "dogbless" },
   { question: "What animal brings blessings?", answer: "dog" },
-  // Add more questions as needed
+  { question: "What animal gives the best hugs?", answer: "octopus" },
+  { question: "What animal embodies the infinite complexity of a human relationship?", answer: "frog" },
 ];
 
 const FadeInText = ({ children, delay = 0 }) => {
