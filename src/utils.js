@@ -8,97 +8,95 @@ export const getRandomColor = () => {
     const rowHeight = 15;
     const margin = 10;
     const usableWidth = 100 - (2 * margin);
-    const verticalTransitionHeight = rowHeight / 2; // Height of vertical transition
-    
-    // First, calculate time differences
+    const verticalTransitionHeight = rowHeight / 2;
+  
+    // Calculate total path length
+    const calculateTotalPathLength = () => {
+      const numRows = Math.ceil(dots.length / dotsPerRow);
+      const horizontalSegments = numRows;
+      const verticalSegments = numRows - 1;
+      
+      return (horizontalSegments * usableWidth) + (verticalSegments * verticalTransitionHeight);
+    };
+  
+    // Calculate position along the path given a percentage (0-1)
+    const getPositionAlongPath = (percentage) => {
+      const totalLength = calculateTotalPathLength();
+      const targetDistance = percentage * totalLength;
+      
+      let distanceCovered = 0;
+      let currentRow = 0;
+      
+      while (distanceCovered <= targetDistance) {
+        // Check if we're in a horizontal segment
+        const horizontalLength = usableWidth;
+        if (targetDistance <= distanceCovered + horizontalLength) {
+          // Position is on this horizontal segment
+          const segmentPercentage = (targetDistance - distanceCovered) / horizontalLength;
+          const xPos = margin + (currentRow % 2 === 0 ? 
+            segmentPercentage * usableWidth : 
+            (1 - segmentPercentage) * usableWidth
+          );
+          return {
+            x: xPos,
+            y: margin + (currentRow * rowHeight)
+          };
+        }
+        distanceCovered += horizontalLength;
+        
+        // Check if we need to add a vertical segment
+        if (currentRow < Math.ceil(dots.length / dotsPerRow) - 1) {
+          const verticalLength = verticalTransitionHeight;
+          if (targetDistance <= distanceCovered + verticalLength) {
+            // Position is on this vertical segment
+            const segmentPercentage = (targetDistance - distanceCovered) / verticalLength;
+            const xPos = margin + (currentRow % 2 === 0 ? usableWidth : 0);
+            return {
+              x: xPos,
+              y: margin + (currentRow * rowHeight) + (segmentPercentage * verticalTransitionHeight)
+            };
+          }
+          distanceCovered += verticalLength;
+        }
+        
+        currentRow++;
+      }
+      
+      // Fallback for last position
+      const lastRow = Math.floor((dots.length - 1) / dotsPerRow);
+      return {
+        x: margin + (lastRow % 2 === 0 ? usableWidth : 0),
+        y: margin + (lastRow * rowHeight)
+      };
+    };
+  
+    // Calculate time-based positions
     const timestamps = dots.map(dot => new Date(dot.dateTime).getTime());
     const minTime = Math.min(...timestamps);
     const maxTime = Math.max(...timestamps);
     const totalTimeSpan = maxTime - minTime;
-    
-    // Group dots by rows while maintaining temporal relationships
-    const rows = [];
-    let currentRow = [];
-    let currentRowTimeSpan = 0;
-    const timePerRow = totalTimeSpan / Math.ceil(dots.length / dotsPerRow);
-    
-    dots.forEach((dot, index) => {
-      currentRow.push({
-        ...dot,
-        timestamp: new Date(dot.dateTime).getTime()
-      });
-      
-      if (currentRow.length === dotsPerRow || index === dots.length - 1) {
-        rows.push(currentRow);
-        currentRow = [];
-      }
-    });
-    
-    return dots.map((dot, index) => {
-      const rowIndex = Math.floor(index / dotsPerRow);
-      const isEvenRow = rowIndex % 2 === 0;
-      const currentRow = rows[rowIndex];
+  
+    return dots.map((dot) => {
       const dotTime = new Date(dot.dateTime).getTime();
-      
-      // Find position within row based on timestamp
-      const rowStartTime = Math.min(...currentRow.map(d => new Date(d.dateTime).getTime()));
-      const rowEndTime = Math.max(...currentRow.map(d => new Date(d.dateTime).getTime()));
-      const rowTimeSpan = rowEndTime - rowStartTime || 1;
-      
-      // Calculate position within the row (0 to 1)
-      let xPercentageInRow = (dotTime - rowStartTime) / rowTimeSpan;
-      
-      // Determine if this dot is in a transition zone
-      const isLastInRow = (index + 1) % dotsPerRow === 0;
-      const isFirstInRow = index % dotsPerRow === 0;
-      
-      let xPercentage, yPercentage;
-      
-      if (isLastInRow && index !== dots.length - 1) {
-        // This dot is transitioning to the next row
-        xPercentage = margin + (isEvenRow ? usableWidth : 0);
-        
-        // Calculate progress through the vertical transition
-        const nextRowStartTime = new Date(dots[index + 1].dateTime).getTime();
-        const transitionProgress = Math.min(1, (dotTime - rowStartTime) / (nextRowStartTime - rowStartTime));
-        
-        // Apply vertical transition
-        yPercentage = margin + (rowIndex * rowHeight) + (transitionProgress * verticalTransitionHeight);
-      } else if (isFirstInRow && index !== 0) {
-        // This dot is completing the transition from the previous row
-        xPercentage = margin + (isEvenRow ? 0 : usableWidth);
-        
-        // Calculate progress through the vertical transition
-        const prevRowEndTime = new Date(dots[index - 1].dateTime).getTime();
-        const transitionProgress = (dotTime - prevRowEndTime) / (rowEndTime - prevRowEndTime);
-        
-        // Apply vertical transition
-        yPercentage = margin + ((rowIndex - 0.5) * rowHeight) + (transitionProgress * verticalTransitionHeight);
-      } else {
-        // Normal horizontal movement
-        if (!isEvenRow) {
-          xPercentageInRow = 1 - xPercentageInRow;
-        }
-        xPercentage = margin + (xPercentageInRow * usableWidth);
-        yPercentage = margin + (rowIndex * rowHeight);
-      }
-      
+      const timePercentage = (dotTime - minTime) / totalTimeSpan;
+      const position = getPositionAlongPath(timePercentage);
+  
       return {
         ...dot,
-        color: getRandomColor(),
+        color: dot.color || getRandomColor(),
         random: {
           x: Math.random() * 90 + 5,
           y: Math.random() * 90 + 5
         },
         chronological: {
-          x: xPercentage,
-          y: yPercentage
+          x: position.x,
+          y: position.y
         }
       };
     });
   };
   
-  // Utility function to format time differences for tooltips
+  // Keep the existing getTimeDifference utility function
   export const getTimeDifference = (date1, date2) => {
     const diff = Math.abs(new Date(date1) - new Date(date2));
     const minutes = Math.floor(diff / 60000);
