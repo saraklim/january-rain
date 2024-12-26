@@ -226,7 +226,8 @@
     },
     {
         "id": 37,
-        "message": "test message",
+        "message": "Birthday cake",
+        "comment": "Happy birthday :)",
         "dateTime": "2023-08-24 11:29:00",
         "author": "NM",
         "image": "/static/images/bday cake.png"
@@ -243,8 +244,80 @@
         "id": 39,
         "comment": "DALL-E | a still-life painting of peaches on a white bedsheet",
         "message": "a still-life painting of peaches on a white bedsheet",
-        "dateTime": "2024-06-21 09:26:00",
+        "dateTime": "2023-06-21 09:26:00",
         "author": "SK",
         "image": "/static/images/DALL·E 2023-06-21 09.26.45 - a still-life painting of peaches on a white bedsheet.png"
+    },
+    {
+        "id": 40,
+        "comment": "I can't actually figure out when this is from - date is provisional.",
+        "message": "Venn diagram",
+        "dateTime": "2023-01-21 16:00:00",
+        "author": "NM",
+        "image": "static/images/image (5) copy.png"
+    },
+    {
+        "id": 41,
+        "comment": "Hahahah I don't think I have ever been more hungover. This is immediately before that call with cambium.",
+        "message": "have I ever been more hungover",
+        "dateTime": "2023-02-13 11:00:00",
+        "author": "SK",
+        "image": "static/images/Screenshot 2023-02-13 at 11.00.22.png"
+    },
+    {
+        "id": 42,
+        "comment": "Happy birthday A, N and O",
+        "message": "happy birthday everybody",
+        "dateTime": "2023-09-11 14:35:51",
+        "author": "SK",
+        "image": "static/images/Screenshot 2023-09-11 at 14.35.51.png"
+    },
+    {
+        "id": 43,
+        "comment": "From an album titled 'stick to the canal'",
+        "message": "stick to the canal",
+        "dateTime": "2022-10-01 11:22:00",
+        "author": "SK",
+        "image": "static/images/IMG_5956.jpeg"
+    },
+    {
+        "id": 45,
+        "comment": "My favourite playful detached clown",
+        "message": "playful detached clown",
+        "dateTime": "2023-06-29 11:32:01",
+        "author": "NM",
+        "image": "static/images/MicrosoftTeams-image (11).png"
+    },
+    {
+        "id": 46,
+        "comment": "the finger",
+        "message": "the finger",
+        "dateTime": "2023-06-08 18:32:01",
+        "author": "NM",
+        "image": "static/images/Screenshot 2023-06-08 at 18.32.03.png"
+    },
+    {
+        "id": 46,
+        "comment": "couldn't find the original",
+        "message": "typing",
+        "dateTime": "2023-07-27 15:21:01",
+        "author": "NM",
+        "image": "static/images/MicrosoftTeams-image (9).png"
+    },
+    {
+        "id": 47,
+        "comment": "barbenheimer",
+        "message": "barbenheimer",
+        "dateTime": "2023-07-20 16:02:01",
+        "author": "NM",
+        "image": "static/images/MicrosoftTeams-image (6).png"
+    },
+    {
+        "id": 48,
+        "comment": "celtic symphony",
+        "message": "sara wolfe",
+        "dateTime": "2022-10-07 14:46:00",
+        "author": "NM",
+        "image": "static/images/MicrosoftTeams-image (16).png"
     }
 ]
