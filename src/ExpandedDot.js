@@ -61,7 +61,7 @@ const ExpandedDot = ({ dot, isExpanded, onClose }) => {
               <p className="text-sm">{formattedDateTime}</p>
               {dot.comment && (
                 <div className="text-sm italic">
-                  "{dot.comment}"
+                  {dot.comment}
                 </div>
               )}
             </div>
