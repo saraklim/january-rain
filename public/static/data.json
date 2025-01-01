@@ -254,7 +254,7 @@
         "message": "Venn diagram",
         "dateTime": "2023-01-21 16:00:00",
         "author": "NM",
-        "image": "static/images/image (5) copy.png"
+        "image": "/static/images/image (5) copy.png"
     },
     {
         "id": 41,
@@ -262,7 +262,7 @@
         "message": "have I ever been more hungover",
         "dateTime": "2023-02-13 11:00:00",
         "author": "SK",
-        "image": "static/images/Screenshot 2023-02-13 at 11.00.22.png"
+        "image": "/static/images/Screenshot 2023-02-13 at 11.00.22.png"
     },
     {
         "id": 42,
@@ -270,15 +270,15 @@
         "message": "happy birthday everybody",
         "dateTime": "2023-09-11 14:35:51",
         "author": "SK",
-        "image": "static/images/Screenshot 2023-09-11 at 14.35.51.png"
+        "image": "/static/images/Screenshot 2023-09-11 at 14.35.51.png"
     },
     {
         "id": 43,
-        "comment": "From an album titled 'stick to the canal'",
+        "comment": "From a photo album titled 'stick to the canal'",
         "message": "stick to the canal",
         "dateTime": "2022-10-01 11:22:00",
         "author": "SK",
-        "image": "static/images/IMG_5956.jpeg"
+        "image": "/static/images/IMG_5956.jpeg"
     },
     {
         "id": 45,
@@ -286,7 +286,7 @@
         "message": "playful detached clown",
         "dateTime": "2023-06-29 11:32:01",
         "author": "NM",
-        "image": "static/images/MicrosoftTeams-image (11).png"
+        "image": "/static/images/MicrosoftTeams-image (11).png"
     },
     {
         "id": 46,
@@ -294,7 +294,7 @@
         "message": "the finger",
         "dateTime": "2023-06-08 18:32:01",
         "author": "NM",
-        "image": "static/images/Screenshot 2023-06-08 at 18.32.03.png"
+        "image": "/static/images/Screenshot 2023-06-08 at 18.32.03.png"
     },
     {
         "id": 46,
@@ -302,7 +302,7 @@
         "message": "typing",
         "dateTime": "2023-07-27 15:21:01",
         "author": "NM",
-        "image": "static/images/MicrosoftTeams-image (9).png"
+        "image": "/static/images/MicrosoftTeams-image (9).png"
     },
     {
         "id": 47,
@@ -310,7 +310,7 @@
         "message": "barbenheimer",
         "dateTime": "2023-07-20 16:02:01",
         "author": "NM",
-        "image": "static/images/MicrosoftTeams-image (6).png"
+        "image": "/static/images/MicrosoftTeams-image (6).png"
     },
     {
         "id": 48,
@@ -318,6 +318,6 @@
         "message": "sara wolfe",
         "dateTime": "2022-10-07 14:46:00",
         "author": "NM",
-        "image": "static/images/MicrosoftTeams-image (16).png"
+        "image": "/static/images/MicrosoftTeams-image (16).png"
     }
 ]
