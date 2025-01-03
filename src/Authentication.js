@@ -53,7 +53,7 @@ const Authentication = ({ onAuthenticate }) => {
               onClick={handleContinue}
               className="text-xl hover:text-blue-400 transition-colors duration-300 flex items-center"
             >
-              Continue <ArrowRight className="ml-2" />
+              Answer the following questions to authenticate <ArrowRight className="ml-2" />
             </button>
           </FadeInText>
         </div>
